@@ -1,0 +1,72 @@
+# ==========================================
+# Berkas Internal Tugas Akhir & Kerahasiaan
+# (DILARANG TERPUBLISH KE GITHUB)
+# ==========================================
+Dokumen-Sidang-Proposal/
+prompt_antigravity_TA-Natashia.md
+PRD_Chatbot_WA_Apotek.md
+*.docx
+*.pptx
+*.pdf
+*.jpeg
+*.jpg
+*.png
+
+# ==========================================
+# Kredensial, API Keys & Rahasia Sistem
+# ==========================================
+.env
+.env.backup
+.env.production
+.env.local
+*.key
+*.pem
+credentials.json
+google-service-account*.json
+service-account*.json
+client_secret*.json
+
+# ==========================================
+# AI Agent, Guidelines & Workspace Caches
+# (DILARANG TERPUBLISH KE GITHUB)
+# ==========================================
+AGENTS.md
+GEMINI.md
+CLAUDE.md
+*.agent.md
+.codex/
+.agents/
+.ua/intermediate/
+.ua/diff-overlay.json
+
+# ==========================================
+# Laravel Framework Standard Exclusions
+# ==========================================
+/vendor/
+/node_modules/
+/public/hot
+/public/storage
+/storage/*.key
+/storage/app/*
+!/storage/app/.gitignore
+/storage/framework/cache/*
+!/storage/framework/cache/.gitignore
+/storage/framework/sessions/*
+!/storage/framework/sessions/.gitignore
+/storage/framework/views/*
+!/storage/framework/views/.gitignore
+/storage/logs/*
+!/storage/logs/.gitignore
+
+# ==========================================
+# Editor & OS Artifacts
+# ==========================================
+.phpunit.result.cache
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
