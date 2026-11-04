@@ -19,8 +19,28 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'wa_number',
+        'role',
+        'is_active',
         'password',
     ];
+
+    public function assignedTickets()
+    {
+        return $this->hasMany(Ticket::class, 'assigned_sales_id');
+    }
+
+    public function defaultCustomers()
+    {
+        return $this->hasMany(Customer::class, 'default_sales_id');
+    }
+
+    public function customers()
+    {
+        return $this->belongsToMany(Customer::class, 'customer_sales', 'sales_id', 'customer_id')
+            ->withPivot('wilayah')
+            ->withTimestamps();
+    }
 
     /**
      * The attributes that should be hidden for serialization.
