@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\OrderReviewController;
 use App\Http\Controllers\Webhook\WhatsAppWebhookController;
 use Illuminate\Support\Facades\Route;
 
@@ -16,3 +17,7 @@ Route::prefix('webhook')->group(function () {
 });
 
 Route::post('/simulator/chat', [DashboardController::class, 'simulateChat'])->name('api.simulator.chat');
+
+// Endpoint Order & Price Review (Untuk Web Frontend & Mobile/Flutter)
+Route::post('/order/calculate', [OrderReviewController::class, 'calculate'])->name('api.order.calculate');
+Route::post('/order/submit-wa', [OrderReviewController::class, 'submitToWhatsApp'])->name('api.order.submit');
