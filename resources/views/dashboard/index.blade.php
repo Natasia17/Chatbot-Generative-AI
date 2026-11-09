@@ -32,13 +32,11 @@
                     </div>
                     <div>
                         <div class="flex items-center space-x-2">
-                            <span class="font-extrabold text-lg text-slate-900 tracking-tight">Omnichannel CRM</span>
+                            <span class="font-extrabold text-lg text-slate-900 tracking-tight">Apotek Natasia</span>
                             <span
-                                class="bg-emerald-100 text-emerald-800 text-xs font-semibold px-2.5 py-0.5 rounded-full border border-emerald-200">Apotek
-                                AI Bot</span>
+                                class="bg-emerald-100 text-emerald-800 text-xs font-semibold px-2.5 py-0.5 rounded-full border border-emerald-200">ChatBot</span>
                         </div>
-                        <p class="text-xs text-slate-500">Tugas Akhir S-1 Informatika UKWK &bull; Natasia Utama
-                            (31123024)</p>
+                        <p class="text-xs text-slate-500">Sistem pintar kelola komunikasi dengan pelanggan</p>
                     </div>
                 </div>
 
@@ -49,7 +47,7 @@
                         <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                         <span>Meta WhatsApp: <b>Siap Terhubung</b></span>
                     </div>
-                    <div
+                    {{-- <div
                         class="flex items-center space-x-1.5 px-3 py-1 bg-slate-100 rounded-full border border-slate-200 text-xs font-medium text-slate-700">
                         <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
                         <span>DB: <b>db_ta_natashia</b></span>
@@ -58,7 +56,7 @@
                         class="flex items-center space-x-1.5 px-3 py-1 bg-slate-100 rounded-full border border-slate-200 text-xs font-medium text-slate-700">
                         <span class="w-2 h-2 rounded-full bg-blue-500"></span>
                         <span>Server: <b>Laragon Nginx</b></span>
-                    </div>
+                    </div> --}}
                 </div>
 
                 <!-- User Profile -->
@@ -174,7 +172,10 @@
                 <a href="{{ route('order.review') }}" target="_blank"
                     class="py-2.5 my-2 px-3.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 flex items-center space-x-1.5 whitespace-nowrap text-xs font-bold transition ml-auto">
                     <span>🛒 Buka Form Review Obat (Pasien)</span>
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
                 </a>
             </div>
 
@@ -583,7 +584,8 @@
 
                 // 4. Update Panel Analisis Semantik AI
                 document.getElementById('metric-faq').innerText = data.matched_faq ?
-                    `#${data.matched_faq.id} (${data.matched_faq.kategori})` : 'Tidak Cocok (Diteruskan)';
+                    (data.matched_faq.id > 0 ? `#${data.matched_faq.id} (${data.matched_faq.kategori})` : data
+                        .matched_faq.kategori) : 'Tidak Cocok (Diteruskan)';
                 document.getElementById('metric-score').innerText = (data.confidence_score * 100).toFixed(1) + '%';
                 document.getElementById('metric-time').innerText = data.response_time_ms + ' ms';
 

@@ -80,12 +80,20 @@ class DashboardController extends Controller
             );
         }
 
+        $intentDetected = 'UNKNOWN';
+        $matchedFaqId = null;
+
+        if ($matchedFaq) {
+            $intentDetected = !empty($matchedFaq->id) ? 'FAQ_' . $matchedFaq->id : ($matchedFaq->kategori ?? 'GENERAL');
+            $matchedFaqId = !empty($matchedFaq->id) ? $matchedFaq->id : null;
+        }
+
         BotEvent::create([
             'conversation_id' => $conversation?->id,
             'raw_query' => $query,
-            'intent_detected' => $matchedFaq ? 'FAQ_' . $matchedFaq->id : 'UNKNOWN',
+            'intent_detected' => $intentDetected,
             'confidence_score' => $confidenceScore,
-            'matched_faq_id' => $matchedFaq?->id,
+            'matched_faq_id' => $matchedFaqId,
             'outcome' => $isMatched ? 'answered_faq' : ($match['status'] === 'clarification' ? 'clarification_offered' : 'escalated_to_sales'),
             'response_time_ms' => $responseTimeMs,
         ]);
@@ -96,7 +104,7 @@ class DashboardController extends Controller
             'matched' => $isMatched || ($match['status'] === 'clarification'),
             'confidence_score' => $confidenceScore,
             'matched_faq' => $matchedFaq ? [
-                'id' => $matchedFaq->id,
+                'id' => $matchedFaq->id ?? 0,
                 'canonical_question' => $matchedFaq->canonical_question,
                 'kategori' => $matchedFaq->kategori,
             ] : null,

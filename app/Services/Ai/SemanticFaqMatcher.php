@@ -130,12 +130,97 @@ class SemanticFaqMatcher
     }
 
     /**
+     * Deteksi apakah query merupakan sapaan awal atau permintaan menu utama (FR-02)
+     */
+    public function isGreeting(string $query): bool
+    {
+        $clean = trim($this->normalize($query));
+        $tokens = array_values(array_filter(explode(' ', $clean)));
+
+        $greetings = [
+            'hai', 'halo', 'hello', 'hi', 'p', 'pagi', 'siang', 'sore', 'malam',
+            'selamat pagi', 'selamat siang', 'selamat sore', 'selamat malam',
+            'assalamualaikum', 'assalamu alaikum', 'salam', 'permisi',
+            'menu', 'help', 'bantuan', 'mulai', 'start', 'tes', 'test', 'ping', 'info'
+        ];
+
+        if (in_array($clean, $greetings, true)) {
+            return true;
+        }
+
+        if (count($tokens) <= 2) {
+            foreach ($tokens as $token) {
+                if (in_array($token, ['hai', 'halo', 'hi', 'pagi', 'siang', 'malam', 'menu', 'tes', 'test', 'p'], true)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Deteksi apakah query merupakan ucapan terima kasih
+     */
+    public function isGratitude(string $query): bool
+    {
+        $clean = trim($this->normalize($query));
+        $gratitudes = [
+            'terima kasih', 'terimakasih', 'makasih', 'tengkyu', 'thank you', 'thanks', 'tq', 'matur nuwun'
+        ];
+
+        foreach ($gratitudes as $g) {
+            if (str_contains($clean, $g)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Cocokkan query pelanggan ke basis data FAQ
      *
-     * @return array{status: string, confidence: float, faq: Faq|null, answer: string|null, suggestions: Collection}
+     * @return array{status: string, confidence: float, faq: mixed, answer: string|null, suggestions: Collection}
      */
     public function match(string $query, float $threshold = 0.50): array
     {
+        // 1. Tangani Sapaan & Menu Layanan Utama (FR-02)
+        if ($this->isGreeting($query)) {
+            $greetingAnswer = "Halo! Selamat datang di Layanan Otomatis WhatsApp Apotek Mitra Resmi.\n\nSaya asisten virtual apotek yang siap membantu Anda. Silakan tanyakan hal seputar:\n\n1️⃣ *Estimasi Pengiriman:* Waktu kirim pesanan obat (H+1)\n2️⃣ *Rute Driver:* Jadwal & rute kirim kurir hari ini\n3️⃣ *Retur Barang:* Syarat & prosedur kemasan obat rusak/bocor\n4️⃣ *Kunjungan Sales:* Konfirmasi & bukti visit sales apotek\n5️⃣ *Katalog & Harga:* Info stok obat dan daftar harga resmi\n\nAtau Anda dapat langsung mengetikkan pertanyaan Anda, contoh: *\"Kapan pesanan saya dikirim?\"*";
+
+            return [
+                'status' => 'matched',
+                'confidence' => 1.0,
+                'faq' => (object) [
+                    'id' => null,
+                    'kategori' => 'Sapaan & Menu Layanan (FR-02)',
+                    'canonical_question' => 'Sapaan Awal & Menu Layanan Apotek',
+                    'answer' => $greetingAnswer,
+                ],
+                'answer' => $greetingAnswer,
+                'suggestions' => collect(),
+            ];
+        }
+
+        // 2. Tangani Ucapan Terima Kasih
+        if ($this->isGratitude($query)) {
+            $gratitudeAnswer = "Sama-sama! Senang dapat membantu Anda. Jika ada kebutuhan obat lainnya atau ada hal yang perlu ditanyakan lagi, jangan ragu untuk menghubungi kami kembali ya. Semoga lekas sembuh dan sehat selalu!";
+
+            return [
+                'status' => 'matched',
+                'confidence' => 1.0,
+                'faq' => (object) [
+                    'id' => null,
+                    'kategori' => 'Penutup & Ucapan Terima Kasih',
+                    'canonical_question' => 'Ucapan Terima Kasih Pelanggan',
+                    'answer' => $gratitudeAnswer,
+                ],
+                'answer' => $gratitudeAnswer,
+                'suggestions' => collect(),
+            ];
+        }
+
         $faqs = Faq::with('variants')->where('is_active', true)->get();
 
         $scored = $faqs->map(function ($faq) use ($query) {

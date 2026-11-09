@@ -78,6 +78,27 @@ class SemanticFaqMatcherTest extends TestCase
         $this->assertStringContainsString('5–6 bulan', $result['answer']);
     }
 
+    public function test_matches_greeting_and_returns_main_service_menu(): void
+    {
+        $query = "Hai";
+        $result = $this->matcher->match($query);
+
+        $this->assertEquals('matched', $result['status']);
+        $this->assertEquals(1.0, $result['confidence']);
+        $this->assertStringContainsString('Layanan Otomatis WhatsApp Apotek', $result['answer']);
+        $this->assertStringContainsString('Estimasi Pengiriman', $result['answer']);
+    }
+
+    public function test_matches_gratitude(): void
+    {
+        $query = "Terima kasih banyak ya mas";
+        $result = $this->matcher->match($query);
+
+        $this->assertEquals('matched', $result['status']);
+        $this->assertEquals(1.0, $result['confidence']);
+        $this->assertStringContainsString('Sama-sama', $result['answer']);
+    }
+
     public function test_returns_unmatched_for_out_of_scope_query(): void
     {
         $query = "berapa harga saham bca hari ini?";
